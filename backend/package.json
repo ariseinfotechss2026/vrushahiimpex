@@ -9,7 +9,9 @@
     "seed:admin": "node scripts/seedAdmin.js",
     "seed:about": "node scripts/seedAboutUs.js",
     "seed:contact": "node scripts/seedContactUs.js",
-    "test:e2e": "node scripts/testEndToEndEnquiry.js"
+    "test:e2e": "node scripts/testEndToEndEnquiry.js",
+    "db:migrate": "node scripts/migrateDatabase.js",
+    "cloudinary:migrate": "node scripts/migrateCloudinary.js"
   },
   "keywords": [],
   "author": "",
