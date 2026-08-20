@@ -1,0 +1,15 @@
+﻿# Vrushahi Impex - robots.txt
+# Instructs search engine crawlers what to index and what to skip
+
+User-agent: *
+Allow: /
+
+# Block admin panel from all search engines
+Disallow: /admin
+Disallow: /admin/
+
+# Block development/API paths
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://vrushahiimpex.com/sitemap.xml

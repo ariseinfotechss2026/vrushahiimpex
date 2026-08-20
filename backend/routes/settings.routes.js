@@ -1,0 +1,11 @@
+const express = require("express");
+const { protect } = require("../middleware/auth");
+const { imageUpload } = require("../middleware/upload");
+const { getSettings, updateSettings } = require("../controllers/settings.controller");
+
+const router = express.Router();
+
+router.get("/", getSettings);
+router.put("/", protect, imageUpload.single("logo"), updateSettings);
+
+module.exports = router;
