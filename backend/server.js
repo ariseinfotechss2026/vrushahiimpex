@@ -15,18 +15,30 @@ connectDB();
 const app = express();
 
 app.use(compression());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
-// CORS — only allow the configured client origin (fixes CRIT-02)
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+// CORS — allow configured client origin(s) with robust origin normalization
+const allowedOrigins = (
+  process.env.CLIENT_URL ||
+  "http://localhost:5173,https://vrushahiimpex.com,https://www.vrushahiimpex.com"
+)
   .split(",")
-  .map((o) => o.trim())
+  .map((o) => o.trim().replace(/\/+$/, ""))
   .filter(Boolean);
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow same-origin requests (no origin header) and whitelisted origins
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/+$/, "");
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
       callback(new Error(`CORS policy: origin '${origin}' is not allowed`));
     },
     credentials: true,
@@ -39,7 +51,17 @@ app.use(cookieParser());
 // Strip MongoDB operators ($, .) from user input to prevent NoSQL injection (fixes CRIT-03)
 app.use(mongoSanitize());
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    maxAge: "30d",
+    immutable: true,
+    etag: true,
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "public, max-age=2592000, immutable");
+    },
+  })
+);
 
 // Global rate limit — 300 req/15min per IP
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));

@@ -80,8 +80,8 @@ export function BlogListPage() {
         {/* Grid of Articles */}
         {filteredPosts.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post) => (
-              <BlogListItem key={post.slug} post={post} />
+            {filteredPosts.map((post, idx) => (
+              <BlogListItem key={post.slug} post={post} priority={idx < 3} />
             ))}
           </div>
         ) : (

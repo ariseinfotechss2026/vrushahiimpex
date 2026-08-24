@@ -39,6 +39,8 @@ export function Footer() {
               alt="Vrushahi Impex Logo"
               width="200"
               height="96"
+              loading="lazy"
+              decoding="async"
               className="h-20 sm:h-24 w-auto object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.3)]"
             />
             {brandDescription && (

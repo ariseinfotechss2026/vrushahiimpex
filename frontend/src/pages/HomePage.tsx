@@ -6,6 +6,7 @@ import { ImageCarousel } from "@/components/ImageCarousel"
 import { ProductCard } from "@/components/ProductCard"
 import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/ui/SectionHeading"
+import { OptimizedImage } from "@/components/ui/OptimizedImage"
 import { useHeroItems, useProducts, useSiteSettings, useAboutCompany, useCategoryProducts, type HeroItem } from "@/lib/queries"
 import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 
@@ -75,14 +76,13 @@ export function HomePage() {
                 className="group flex shrink-0 flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
               >
                 <div className="flex h-44 w-44 items-center justify-center p-1 sm:h-56 sm:w-56 md:h-64 md:w-64 aspect-square">
-                  <img
-                    src={cloudinaryUrl(product.image?.url, 250)}
+                  <OptimizedImage
+                    src={product.image?.url}
                     alt={product.name}
-                    width="250"
-                    height="250"
-                    loading="lazy"
-                    decoding="async"
+                    targetWidth={250}
+                    priority={idx < 4}
                     className="max-h-full max-w-full object-contain aspect-square filter drop-shadow-md transition-transform duration-300 group-hover:scale-110"
+                    containerClassName="h-full w-full bg-transparent flex items-center justify-center"
                   />
                 </div>
                 <span className="-mt-3 sm:-mt-5 md:-mt-6 text-base sm:text-xl font-semibold capitalize text-foreground/90 transition-colors group-hover:text-emerald-600 tracking-wide">
@@ -94,13 +94,13 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* About Company Section - Reserved Height Container to prevent CLS layout shift */}
-      <section className="bg-secondary/40 pt-12 pb-8 sm:pt-16 sm:pb-10 min-h-[420px]">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 md:grid-cols-2 min-h-[380px]">
+      {/* About Company Section */}
+      <section className="bg-secondary/40 pt-8 pb-8 sm:pt-14 sm:pb-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 sm:gap-10 sm:px-6 md:grid-cols-2">
           {aboutData ? (
             <>
               {aboutData.images && aboutData.images.length > 0 && (
-                <div className="relative overflow-hidden rounded-2xl shadow-lg group aspect-[16/9] min-h-[280px]">
+                <div className="relative w-full overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl ring-1 ring-black/5 group aspect-[16/10] sm:aspect-[16/9] md:aspect-[4/3] lg:aspect-[16/10]">
                   <ImageCarousel
                     images={aboutData.images.map((img) => ({
                       src: cloudinaryUrl(img.url, 800) || "",
@@ -109,27 +109,26 @@ export function HomePage() {
                     autoplay
                     interval={5000}
                     itemBasisClassName="basis-full"
-                    itemHeightClassName="h-72 sm:h-96 md:h-[400px]"
-                    rounded
+                    className="w-full h-full"
                   />
                 </div>
               )}
-              <div>
+              <div className="w-full">
                 <SectionHeading
                   badge={aboutData.badge}
                   icon={Award}
                   title={aboutData.title}
                   highlightWord={aboutData.highlightWord}
                   align="left"
-                  className="mb-4"
+                  className="mb-3 sm:mb-4"
                 />
                 {aboutData.leadText && (
-                  <p className="mt-4 text-base font-medium text-foreground leading-relaxed">
+                  <p className="mt-3 sm:mt-4 text-sm sm:text-base font-medium text-foreground leading-relaxed">
                     {aboutData.leadText}
                   </p>
                 )}
                 {aboutData.bodyText && (
-                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {aboutData.bodyText}
                   </p>
                 )}
@@ -140,7 +139,7 @@ export function HomePage() {
                       aria-label={`Read more about ${settings?.companyInfo?.name || "Vrushahi Impex"}`}
                     />
                   }
-                  className="mt-6 font-semibold px-6 shadow-md hover:shadow-lg transition-all"
+                  className="mt-5 sm:mt-6 font-semibold px-6 shadow-md hover:shadow-lg transition-all"
                 >
                   {aboutData.buttonText && aboutData.buttonText.toLowerCase() !== "read more"
                     ? aboutData.buttonText
@@ -150,7 +149,7 @@ export function HomePage() {
             </>
           ) : (
             <>
-              <div className="h-72 sm:h-96 w-full rounded-2xl bg-slate-200/60 animate-pulse aspect-[16/9]" />
+              <div className="w-full rounded-2xl sm:rounded-3xl bg-slate-200/60 animate-pulse aspect-[16/10] sm:aspect-[16/9] md:aspect-[4/3] lg:aspect-[16/10]" />
               <div className="space-y-4">
                 <div className="h-8 w-48 rounded bg-slate-200/60 animate-pulse" />
                 <div className="h-10 w-3/4 rounded bg-slate-200/60 animate-pulse" />

@@ -131,13 +131,28 @@ export interface Stats {
   monthlyTimeline?: MonthlyTimelineItem[]
 }
 
-export const useCategories = () => useQuery({ queryKey: ["categories"], queryFn: () => api.get<Category[]>("/categories") })
+export const useCategories = () =>
+  useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const data = await api.get<Category[]>("/categories")
+      if (data && data.length > 0) {
+        try {
+          localStorage.setItem(CATEGORIES_CACHE_KEY, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: () => getInitialCacheData<Category[]>(CATEGORIES_CACHE_KEY),
+    staleTime: 15 * 60 * 1000,
+  })
 
 export const useCategory = (slug: string | undefined) =>
   useQuery({
     queryKey: ["category", slug],
     queryFn: () => api.get<Category & { products: Product[] }>(`/categories/${slug}`),
     enabled: !!slug,
+    staleTime: 10 * 60 * 1000,
   })
 
 export const useProducts = (params?: { category?: string; featured?: boolean }) => {
@@ -145,9 +160,21 @@ export const useProducts = (params?: { category?: string; featured?: boolean }) 
   if (params?.category) search.set("category", params.category)
   if (params?.featured) search.set("featured", "true")
   const qs = search.toString()
+  const cacheKey = !qs ? PRODUCTS_CACHE_KEY : params?.featured ? FEATURED_PRODUCTS_CACHE_KEY : undefined
+
   return useQuery({
     queryKey: ["products", params],
-    queryFn: () => api.get<Product[]>(`/products${qs ? `?${qs}` : ""}`),
+    queryFn: async () => {
+      const data = await api.get<Product[]>(`/products${qs ? `?${qs}` : ""}`)
+      if (data && data.length > 0 && cacheKey) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: cacheKey ? () => getInitialCacheData<Product[]>(cacheKey) : undefined,
+    staleTime: 15 * 60 * 1000,
   })
 }
 
@@ -156,19 +183,46 @@ export const useCategoryProducts = (params?: { category?: string; highlight?: bo
   if (params?.category) search.set("category", params.category)
   if (params?.highlight) search.set("highlight", "true")
   const qs = search.toString()
+  const cacheKey = params?.highlight ? HIGHLIGHT_PRODUCTS_CACHE_KEY : undefined
+
   return useQuery({
     queryKey: ["category-products", params],
-    queryFn: () => api.get<Product[]>(`/category-products${qs ? `?${qs}` : ""}`),
+    queryFn: async () => {
+      const data = await api.get<Product[]>(`/category-products${qs ? `?${qs}` : ""}`)
+      if (data && data.length > 0 && cacheKey) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: cacheKey ? () => getInitialCacheData<Product[]>(cacheKey) : undefined,
+    staleTime: 15 * 60 * 1000,
   })
 }
 
-export const useBlogPosts = () => useQuery({ queryKey: ["blogPosts"], queryFn: () => api.get<BlogPost[]>("/blog") })
+export const useBlogPosts = () =>
+  useQuery({
+    queryKey: ["blogPosts"],
+    queryFn: async () => {
+      const data = await api.get<BlogPost[]>("/blog")
+      if (data && data.length > 0) {
+        try {
+          localStorage.setItem(BLOG_POSTS_CACHE_KEY, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: () => getInitialCacheData<BlogPost[]>(BLOG_POSTS_CACHE_KEY),
+    staleTime: 15 * 60 * 1000,
+  })
 
 export const useBlogPost = (slug: string | undefined) =>
   useQuery({
     queryKey: ["blogPost", slug],
     queryFn: () => api.get<BlogPost>(`/blog/${slug}`),
     enabled: !!slug,
+    staleTime: 10 * 60 * 1000,
   })
 
 export interface HeroVideo {
@@ -198,7 +252,20 @@ export interface AboutCompany {
 }
 
 export const useAboutCompany = () =>
-  useQuery({ queryKey: ["aboutCompany"], queryFn: () => api.get<AboutCompany>("/about") })
+  useQuery({
+    queryKey: ["aboutCompany"],
+    queryFn: async () => {
+      const data = await api.get<AboutCompany>("/about")
+      if (data) {
+        try {
+          localStorage.setItem(ABOUT_COMPANY_CACHE_KEY, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: () => getInitialCacheData<AboutCompany>(ABOUT_COMPANY_CACHE_KEY),
+    staleTime: 15 * 60 * 1000,
+  })
 
 export interface CoreValueItem {
   _id?: string
@@ -309,10 +376,36 @@ export interface FooterSettingsData {
 }
 
 export const useAboutUsPage = () =>
-  useQuery({ queryKey: ["aboutUsPage"], queryFn: () => api.get<AboutUsPageData>("/about-us-page") })
+  useQuery({
+    queryKey: ["aboutUsPage"],
+    queryFn: async () => {
+      const data = await api.get<AboutUsPageData>("/about-us-page")
+      if (data) {
+        try {
+          localStorage.setItem(ABOUT_US_PAGE_CACHE_KEY, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: () => getInitialCacheData<AboutUsPageData>(ABOUT_US_PAGE_CACHE_KEY),
+    staleTime: 15 * 60 * 1000,
+  })
 
 export const useContactUsPage = () =>
-  useQuery({ queryKey: ["contactUsPage"], queryFn: () => api.get<ContactUsPageData>("/contact-us-page") })
+  useQuery({
+    queryKey: ["contactUsPage"],
+    queryFn: async () => {
+      const data = await api.get<ContactUsPageData>("/contact-us-page")
+      if (data) {
+        try {
+          localStorage.setItem(CONTACT_US_PAGE_CACHE_KEY, JSON.stringify(data))
+        } catch {}
+      }
+      return data
+    },
+    placeholderData: () => getInitialCacheData<ContactUsPageData>(CONTACT_US_PAGE_CACHE_KEY),
+    staleTime: 15 * 60 * 1000,
+  })
 
 export const useFooterSettings = () =>
   useQuery({ queryKey: ["footerSettings"], queryFn: () => api.get<FooterSettingsData>("/footer-settings") })
@@ -344,6 +437,14 @@ export const useLegalPage = (slug: string | undefined) =>
 const HERO_ITEMS_CACHE_KEY = "vrushahi_hero_items_cache"
 const HERO_VIDEOS_CACHE_KEY = "vrushahi_hero_videos_cache"
 const SITE_SETTINGS_CACHE_KEY = "vrushahi_site_settings_cache"
+const BLOG_POSTS_CACHE_KEY = "vrushahi_blog_posts_cache"
+const CATEGORIES_CACHE_KEY = "vrushahi_categories_cache"
+const PRODUCTS_CACHE_KEY = "vrushahi_products_cache"
+const FEATURED_PRODUCTS_CACHE_KEY = "vrushahi_featured_products_cache"
+const HIGHLIGHT_PRODUCTS_CACHE_KEY = "vrushahi_highlight_products_cache"
+const ABOUT_COMPANY_CACHE_KEY = "vrushahi_about_company_cache"
+const ABOUT_US_PAGE_CACHE_KEY = "vrushahi_about_us_page_cache"
+const CONTACT_US_PAGE_CACHE_KEY = "vrushahi_contact_us_page_cache"
 
 function getInitialCacheData<T>(key: string): T | undefined {
   try {

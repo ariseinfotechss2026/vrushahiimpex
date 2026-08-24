@@ -45,6 +45,9 @@ export function Header() {
             alt={settings?.companyInfo?.name || "Vrushahi Impex"}
             width="160"
             height="68"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
             className="h-16 sm:h-[68px] w-auto object-contain py-0.5"
           />
         </Link>
@@ -111,6 +114,8 @@ export function Header() {
                 <img
                   src={cloudinaryUrl(settings?.companyInfo?.logo?.url, 350) || getImage("vrushahilogo.png")}
                   alt={settings?.companyInfo?.name || "Vrushahi Impex"}
+                  loading="lazy"
+                  decoding="async"
                   className="h-14 sm:h-16 w-auto max-w-[170px] object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.25)] py-0.5"
                 />
               </Link>

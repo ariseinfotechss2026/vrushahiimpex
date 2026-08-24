@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { Plus, Pencil, Trash2, Search, Filter, Package, FolderTree, Loader2, Heart } from "lucide-react"
 import { useCategories, useCategoryProducts, type Product } from "@/lib/queries"
 import { api, ApiError } from "@/lib/api"
+import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -176,7 +177,7 @@ export function AddProductPage() {
                         <TableCell>
                           {p.image?.url ? (
                             <img
-                              src={p.image.url}
+                              src={cloudinaryUrl(p.image.url, 80)}
                               alt={p.name}
                               className="size-11 rounded-lg object-cover border border-border shadow-xs"
                               loading="lazy"

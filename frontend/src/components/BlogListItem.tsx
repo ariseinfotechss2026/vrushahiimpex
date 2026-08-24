@@ -1,28 +1,45 @@
 import { Link } from "react-router-dom"
 import type { BlogPost } from "@/lib/queries"
-import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
+import { preloadImage } from "@/lib/cloudinaryUrl"
 import { Calendar, ArrowRight } from "lucide-react"
+import { OptimizedImage } from "@/components/ui/OptimizedImage"
 
-export function BlogListItem({ post }: { post: BlogPost }) {
+export function BlogListItem({ post, priority = false }: { post: BlogPost; priority?: boolean }) {
   const formattedDate = new Date(post.date).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",
   })
 
+  const handlePrefetch = () => {
+    if (post.image?.url) {
+      // Preload large blog detail hero image in browser cache
+      preloadImage(post.image.url, 900)
+    }
+  }
+
   return (
-    <Link to={`/blog/${post.slug}`} className="group block h-full">
+    <Link
+      to={`/blog/${post.slug}`}
+      className="group block h-full"
+      onMouseEnter={handlePrefetch}
+      onTouchStart={handlePrefetch}
+      onFocus={handlePrefetch}
+    >
       <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-primary/40">
-        {/* Image Container - compact height */}
+        {/* Image Container - compact height with shimmer & lazy loading */}
         <div className="relative h-36 sm:h-40 w-full overflow-hidden bg-muted">
-          <img
-            src={cloudinaryUrl(post.image?.url, 500)}
+          <OptimizedImage
+            src={post.image?.url}
             alt={post.title}
-            loading="lazy"
-            decoding="async"
+            targetWidth={450}
+            srcSetWidths={[280, 400, 600]}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={priority}
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            containerClassName="h-full w-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
         </div>
 
         {/* Content Container */}

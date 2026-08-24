@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { PageMeta } from "@/components/PageMeta"
 import type { BlogPost } from "@/lib/queries"
-import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { BlogListItem } from "@/components/BlogListItem"
+import { OptimizedImage } from "@/components/ui/OptimizedImage"
 import { ArrowLeft, Calendar } from "lucide-react"
 
 export function BlogPostTemplate({ post, allPosts = [] }: { post: BlogPost; allPosts?: BlogPost[] }) {
@@ -50,14 +50,17 @@ export function BlogPostTemplate({ post, allPosts = [] }: { post: BlogPost; allP
 
       {/* Main Content Container */}
       <article className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
-        {/* Featured Image - Compact & Centered */}
+        {/* Featured Image - Compact & Centered with High Priority */}
         <div className="mb-6 overflow-hidden rounded-2xl border border-border/70 shadow-sm max-w-xl mx-auto">
-          <img
-            src={cloudinaryUrl(post.image?.url, 900)}
+          <OptimizedImage
+            src={post.image?.url}
             alt={post.title}
-            loading="eager"
-            decoding="async"
+            targetWidth={900}
+            srcSetWidths={[400, 650, 900, 1200]}
+            sizes="(max-width: 768px) 100vw, 750px)"
+            priority
             className="h-48 sm:h-56 w-full object-cover"
+            containerClassName="h-48 sm:h-56 w-full"
           />
         </div>
 

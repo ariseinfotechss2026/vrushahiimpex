@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, X, Video, CheckCircle2, Film,
 import { useHeroItems, useHeroVideos, useAboutCompany, type HeroItem, type HeroSubItem, type AboutCompany, type AboutCompanyImage } from "@/lib/queries"
 import { api, ApiError } from "@/lib/api"
 import { getImage } from "@/assets/images"
+import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -197,7 +198,13 @@ export function HeroPage() {
                       </TableCell>
                       <TableCell>
                         {item.image?.url && (
-                          <img src={item.image.url} alt="" className="size-10 rounded-md object-cover border border-border" loading="lazy" decoding="async" />
+                          <img
+                            src={cloudinaryUrl(item.image.url, 80)}
+                            alt=""
+                            className="size-10 rounded-md object-cover border border-border"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                       </TableCell>
                       <TableCell className="font-semibold text-foreground">{item.name}</TableCell>
@@ -321,8 +328,10 @@ export function HeroPage() {
                     {aboutData?.images?.map((img, i) => (
                       <div key={i} className="relative group overflow-hidden rounded-lg border border-border bg-black/5 aspect-video">
                         <img
-                          src={img.url.startsWith("http") ? img.url : getImage(img.url)}
+                          src={cloudinaryUrl(img.url.startsWith("http") ? img.url : getImage(img.url), 300)}
                           alt={img.alt || "About image"}
+                          loading="lazy"
+                          decoding="async"
                           className="h-full w-full object-cover"
                         />
                         <div className="absolute inset-x-0 bottom-0 bg-black/75 px-1.5 py-1 text-[10px] text-white truncate">
@@ -825,8 +834,10 @@ function EditAboutCompanyDialog({
                 <div key={index} className="flex items-center justify-between gap-3 bg-background p-2.5 rounded-md border border-border">
                   <div className="flex items-center gap-3">
                     <img
-                      src={img.url.startsWith("http") ? img.url : getImage(img.url)}
+                      src={cloudinaryUrl(img.url.startsWith("http") ? img.url : getImage(img.url), 100)}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="size-12 rounded object-cover border border-border shrink-0"
                     />
                     <span className="text-xs font-semibold text-foreground">Existing Image {index + 1}</span>
@@ -850,6 +861,8 @@ function EditAboutCompanyDialog({
                     <img
                       src={img.previewUrl}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="size-12 rounded object-cover border border-emerald-500/40 shrink-0"
                     />
                     <span className="text-xs font-bold text-emerald-600">New Image to Upload {index + 1}</span>

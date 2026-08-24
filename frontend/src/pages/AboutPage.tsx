@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { PageMeta } from "@/components/PageMeta"
 import { Button } from "@/components/ui/button"
+import { OptimizedImage } from "@/components/ui/OptimizedImage"
 import { getImage } from "@/assets/images"
 import { useAboutUsPage } from "@/lib/queries"
 import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
@@ -123,10 +124,14 @@ export function AboutPage() {
             {heroImageUrl && (
               <div>
                 <div className="relative overflow-hidden rounded-[20px] sm:rounded-[24px] border border-border/80 shadow-2xl group">
-                  <img
+                  <OptimizedImage
                     src={heroImageUrl}
                     alt={heroCaptionTitle || "Vrushahi Impex"}
+                    targetWidth={800}
+                    srcSetWidths={[400, 600, 800, 1000]}
+                    priority
                     className="h-64 sm:h-[450px] w-full object-cover transition-transform duration-700 hover:scale-105"
+                    containerClassName="h-64 sm:h-[450px] w-full"
                   />
                   
                   {/* Dark Gradient Overlay for Caption */}

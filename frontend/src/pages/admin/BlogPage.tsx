@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { useBlogPosts, type BlogPost } from "@/lib/queries"
 import { api, ApiError } from "@/lib/api"
+import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -54,7 +55,13 @@ export function BlogPage() {
                   <TableRow key={post._id} className="hover:bg-muted/30">
                     <TableCell>
                       {post.image?.url && (
-                        <img src={post.image.url} alt="" className="size-10 rounded-md object-cover border border-border" loading="lazy" decoding="async" />
+                        <img
+                          src={cloudinaryUrl(post.image.url, 80)}
+                          alt=""
+                          className="size-10 rounded-md object-cover border border-border"
+                          loading="lazy"
+                          decoding="async"
+                        />
                       )}
                     </TableCell>
                     <TableCell className="font-semibold text-foreground">{post.title}</TableCell>

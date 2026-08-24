@@ -50,7 +50,13 @@ export function AdminSidebarNav({ onNavClick }: { onNavClick?: () => void }) {
         {/* Brand Header */}
         <div className="flex items-center gap-3.5 border-b border-zinc-800/80 px-5 py-4">
           {logoUrl ? (
-            <img src={logoUrl} alt="Logo" className="h-14 w-auto max-w-[160px] object-contain" />
+            <img
+              src={logoUrl}
+              alt="Logo"
+              loading="eager"
+              decoding="async"
+              className="h-14 w-auto max-w-[160px] object-contain"
+            />
           ) : (
             <div className="flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
               <Sparkles className="size-6" />

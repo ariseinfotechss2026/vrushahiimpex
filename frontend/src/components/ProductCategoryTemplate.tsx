@@ -3,12 +3,12 @@ import { PageMeta } from "@/components/PageMeta"
 import { ProductCard } from "@/components/ProductCard"
 import type { Category, Product } from "@/lib/queries"
 import { getImage } from "@/assets/images"
-import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
+import { OptimizedImage } from "@/components/ui/OptimizedImage"
 
 function resolveProductImage(url?: string): string {
   if (!url) return ""
   if (url.startsWith("http://") || url.startsWith("https://")) {
-    return cloudinaryUrl(url, 300) || ""
+    return url
   }
   return getImage(url)
 }
@@ -111,12 +111,13 @@ export function ProductCategoryTemplate({ category }: { category: Category & { p
                   }`}
                 >
                   {prod.imageSrc && (
-                    <img
+                    <OptimizedImage
                       src={prod.imageSrc}
                       alt={prod.name}
-                      loading={idx < 2 ? "eager" : "lazy"}
-                      decoding="async"
+                      targetWidth={300}
+                      priority={idx < 2}
                       className="w-full h-[105px] sm:h-[160px] object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+                      containerClassName="w-full h-[105px] sm:h-[160px] bg-transparent flex items-center justify-center"
                     />
                   )}
                   <div className="mt-1 text-center">
@@ -147,12 +148,13 @@ export function ProductCategoryTemplate({ category }: { category: Category & { p
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {category.products.map((product) => (
+          {category.products.map((product, idx) => (
             <ProductCard
               key={product._id}
               name={product.name}
               image={product.image?.url ?? ""}
               description={product.description}
+              priority={idx < 4}
             />
           ))}
         </div>

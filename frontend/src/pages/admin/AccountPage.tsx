@@ -214,6 +214,8 @@ export function AccountPage() {
                 <img
                   src={logoPreview || currentLogoUrl}
                   alt="Active Logo"
+                  loading="lazy"
+                  decoding="async"
                   className="h-12 w-auto max-w-[200px] object-contain drop-shadow-md"
                 />
                 <div className="text-xs text-zinc-400">

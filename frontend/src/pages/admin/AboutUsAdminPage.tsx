@@ -318,6 +318,8 @@ export function AboutUsAdminPage() {
                         : getImage("about.jpg"))
                     }
                     alt="About Hero"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover"
                   />
                 </div>
