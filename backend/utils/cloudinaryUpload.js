@@ -5,6 +5,9 @@ const streamUpload = (buffer, folder, options = {}) =>
     const uploadOptions = {
       folder: `vrushahi/${folder}`,
       resource_type: options.resource_type || "auto",
+      fetch_format: options.resource_type === "video" ? undefined : "auto",
+      quality: options.resource_type === "video" ? undefined : "auto:good",
+      timeout: 60000,
       ...options,
     };
     const stream = cloudinary.uploader.upload_stream(uploadOptions, (err, result) => {

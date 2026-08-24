@@ -4,7 +4,6 @@ import { toast } from "sonner"
 import { Plus, Pencil, Trash2, Sparkles } from "lucide-react"
 import { useProducts, type Product } from "@/lib/queries"
 import { api, ApiError } from "@/lib/api"
-import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ImageUploadField } from "@/components/admin/ImageUploadField"
+import { AdminThumbnail } from "@/components/admin/AdminThumbnail"
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog"
 
 export function ProductsPage() {
@@ -116,21 +116,14 @@ export function ProductsPage() {
                           onCheckedChange={() => toggleSelect(p._id)}
                         />
                       </TableCell>
-                      <TableCell>
-                        {p.image?.url ? (
-                          <img
-                            src={cloudinaryUrl(p.image.url, 80)}
+                        <TableCell>
+                          <AdminThumbnail
+                            src={p.image?.url}
                             alt={p.name}
-                            className="size-10 rounded-md object-cover border border-border"
-                            loading="lazy"
-                            decoding="async"
+                            className="size-10 rounded-md"
+                            icon={<Sparkles className="size-4 opacity-60" />}
                           />
-                        ) : (
-                          <div className="flex size-10 items-center justify-center rounded-md border border-border bg-muted/50 text-muted-foreground">
-                            <Sparkles className="size-4" />
-                          </div>
-                        )}
-                      </TableCell>
+                        </TableCell>
                       <TableCell className="font-semibold text-foreground">{p.name}</TableCell>
                       <TableCell>
                         <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${

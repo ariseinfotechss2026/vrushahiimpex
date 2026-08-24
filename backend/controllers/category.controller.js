@@ -45,20 +45,30 @@ const createCategory = asyncHandler(async (req, res) => {
 
   const files = req.files || [];
   const bannerFile = files.find((f) => f.fieldname === "image" || f.fieldname === "bannerImage");
-  if (bannerFile) {
-    category.bannerImage = await streamUpload(bannerFile.buffer, "categories");
-  }
+  
+  const uploadBannerPromise = bannerFile
+    ? streamUpload(bannerFile.buffer, "categories")
+    : Promise.resolve(null);
 
-  const showcaseList = [];
-  for (let i = 0; i < 4; i++) {
+  const showcaseUploadPromises = [0, 1, 2, 3].map(async (i) => {
     const file = files.find((f) => f.fieldname === `showcase_${i}`);
     const nameVal = req.body[`showcaseName_${i}`] || "";
     if (file) {
       const uploaded = await streamUpload(file.buffer, "categories/showcase");
-      showcaseList.push({ name: nameVal, url: uploaded.url, public_id: uploaded.public_id });
+      return { name: nameVal, url: uploaded.url, public_id: uploaded.public_id };
     }
+    return null;
+  });
+
+  const [bannerUpload, ...showcaseResults] = await Promise.all([
+    uploadBannerPromise,
+    ...showcaseUploadPromises,
+  ]);
+
+  if (bannerUpload) {
+    category.bannerImage = bannerUpload;
   }
-  category.showcaseImages = showcaseList;
+  category.showcaseImages = showcaseResults.filter(Boolean);
 
   await category.save();
   res.status(201).json({ success: true, data: category });
@@ -81,16 +91,19 @@ const updateCategory = asyncHandler(async (req, res) => {
 
   const files = req.files || [];
   const bannerFile = files.find((f) => f.fieldname === "image" || f.fieldname === "bannerImage");
-  if (bannerFile) {
-    const oldPublicId = category.bannerImage?.public_id;
-    category.bannerImage = await streamUpload(bannerFile.buffer, "categories");
-    if (oldPublicId) deleteImage(oldPublicId);
-  }
+  
+  const uploadBannerPromise = bannerFile
+    ? (async () => {
+        const oldPublicId = category.bannerImage?.public_id;
+        const uploaded = await streamUpload(bannerFile.buffer, "categories");
+        if (oldPublicId) deleteImage(oldPublicId);
+        return uploaded;
+      })()
+    : Promise.resolve(null);
 
   const currentShowcase = category.showcaseImages || [];
-  const updatedShowcase = [];
 
-  for (let i = 0; i < 4; i++) {
+  const showcasePromises = [0, 1, 2, 3].map(async (i) => {
     const file = files.find((f) => f.fieldname === `showcase_${i}`);
     const nameVal = req.body[`showcaseName_${i}`] ?? currentShowcase[i]?.name ?? "";
     const existingUrl = req.body[`existingShowcaseUrl_${i}`];
@@ -101,15 +114,24 @@ const updateCategory = asyncHandler(async (req, res) => {
         deleteImage(currentShowcase[i].public_id);
       }
       const uploaded = await streamUpload(file.buffer, "categories/showcase");
-      updatedShowcase.push({ name: nameVal, url: uploaded.url, public_id: uploaded.public_id });
+      return { name: nameVal, url: uploaded.url, public_id: uploaded.public_id };
     } else if (existingUrl) {
-      updatedShowcase.push({ name: nameVal, url: existingUrl, public_id: existingPublicId || "" });
+      return { name: nameVal, url: existingUrl, public_id: existingPublicId || "" };
     } else if (currentShowcase[i]?.url) {
-      updatedShowcase.push({ name: nameVal, url: currentShowcase[i].url, public_id: currentShowcase[i].public_id });
+      return { name: nameVal, url: currentShowcase[i].url, public_id: currentShowcase[i].public_id };
     }
-  }
+    return null;
+  });
 
-  category.showcaseImages = updatedShowcase;
+  const [bannerUpload, ...updatedShowcase] = await Promise.all([
+    uploadBannerPromise,
+    ...showcasePromises,
+  ]);
+
+  if (bannerUpload) {
+    category.bannerImage = bannerUpload;
+  }
+  category.showcaseImages = updatedShowcase.filter(Boolean);
 
   await category.save();
   res.json({ success: true, data: category });

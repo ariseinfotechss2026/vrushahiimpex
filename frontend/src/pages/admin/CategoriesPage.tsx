@@ -4,7 +4,6 @@ import { toast } from "sonner"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { useCategories, type Category } from "@/lib/queries"
 import { api, ApiError } from "@/lib/api"
-import { cloudinaryUrl } from "@/lib/cloudinaryUrl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ImageUploadField } from "@/components/admin/ImageUploadField"
+import { AdminThumbnail } from "@/components/admin/AdminThumbnail"
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog"
 
 export function CategoriesPage() {
@@ -58,14 +58,12 @@ export function CategoriesPage() {
                         {cat.showcaseImages && cat.showcaseImages.some((img) => img?.url) ? (
                           cat.showcaseImages.map((img, idx) =>
                             img?.url ? (
-                              <img
+                              <AdminThumbnail
                                 key={idx}
-                                src={cloudinaryUrl(img.url, 80)}
+                                src={img.url}
                                 alt={img.name || `Image ${idx + 1}`}
-                                title={img.name || `Photo ${idx + 1}`}
-                                loading="lazy"
-                                decoding="async"
-                                className="size-9 rounded-md border border-border object-cover shadow-xs"
+                                width={80}
+                                className="size-9 rounded-md"
                               />
                             ) : null
                           )
