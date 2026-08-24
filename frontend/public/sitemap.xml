@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://vrushahiimpex.com/</loc>
@@ -31,7 +31,42 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://vrushahiimpex.com/products/indian-herbs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://vrushahiimpex.com/products/dry-fruits</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/nuts-nut-products</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/fresh-fruits</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/fresh-vegetables</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/natural-honey</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/healthy-millets</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vrushahiimpex.com/products/handicrafts-products</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

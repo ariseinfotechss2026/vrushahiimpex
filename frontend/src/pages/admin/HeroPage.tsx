@@ -662,7 +662,7 @@ function EditAboutCompanyDialog({
   const [leadText, setLeadText] = useState(about?.leadText || "")
   const [bodyText, setBodyText] = useState(about?.bodyText || "")
   const [buttonText, setButtonText] = useState(about?.buttonText || "")
-  const [buttonLink, setButtonLink] = useState(about?.buttonLink || "/about-us")
+  const buttonLink = about?.buttonLink || "/about-us"
 
   const [existingImages, setExistingImages] = useState<AboutCompanyImage[]>(about?.images || [])
 
@@ -778,29 +778,16 @@ function EditAboutCompanyDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="buttonText" className="text-xs font-semibold">CTA Button Label</Label>
-              <Input
-                id="buttonText"
-                value={buttonText}
-                onChange={(e) => setButtonText(e.target.value)}
-                placeholder="Read More"
-                className="h-9 text-xs"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="buttonLink" className="text-xs font-semibold">CTA Button Link</Label>
-              <Input
-                id="buttonLink"
-                value={buttonLink}
-                onChange={(e) => setButtonLink(e.target.value)}
-                placeholder="/about-us"
-                className="h-9 text-xs"
-                required
-              />
-            </div>
+          <div className="space-y-1">
+            <Label htmlFor="buttonText" className="text-xs font-semibold">CTA Button Label</Label>
+            <Input
+              id="buttonText"
+              value={buttonText}
+              onChange={(e) => setButtonText(e.target.value)}
+              placeholder="Read More"
+              className="h-9 text-xs"
+              required
+            />
           </div>
 
           {/* Carousel Images Manager */}
